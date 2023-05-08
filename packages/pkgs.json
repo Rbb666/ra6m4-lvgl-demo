@@ -1,0 +1,17 @@
+[
+ {
+  "path": "/packages/multimedia/LVGL/LVGL", 
+  "ver": "v8.3.5", 
+  "name": "LVGL"
+ }, 
+ {
+  "path": "/packages/multimedia/LVGL/lv_music_demo", 
+  "ver": "v0.3.2", 
+  "name": "LV_MUSIC_DEMO"
+ }, 
+ {
+  "path": "/packages/peripherals/ili9341", 
+  "ver": "latest", 
+  "name": "ILI9341"
+ }
+]
