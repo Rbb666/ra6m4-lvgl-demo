@@ -1,13 +1,8 @@
-# 瑞萨 CPK-RA6M4 开发板 BSP 说明
+# 瑞萨 CPK-RA6M4 开发板 LVGL Demo 说明
 
 ## 简介
 
-本文档为瑞萨 CPK-RA6M4 开发板提供的 BSP (板级支持包) 说明。通过阅读快速上手章节开发者可以快速地上手该 BSP，将 RT-Thread 运行在开发板上。
-
-主要内容如下：
-
-- 开发板介绍
-- BSP 快速上手指南
+本设计是在 CPK-RA6M4 开发板上运行的 LVGL 音乐播放器 Demo。基于 RT-Thread 操作系统，支持 MDK5 软件开发环境。CPK-RA6M4  中控芯片为 RA6M4。本参考设计默认运行的是 LVGL 音乐播放器，拥有绚丽的音乐播放界面，并且，通过主界面的播放/暂停、上一首/下一首按钮控件，可以对音乐播放器进行播放控制。
 
 ## 开发板介绍
 
@@ -23,52 +18,41 @@
 - 调试接口：板载 J-Link 接口
 - 扩展接口：两个 PMOD 连接器
 
-**更多详细资料及工具**
+## 技术架构
 
-## 外设支持
+开发框架包括系统层、框架层、应用层三个主要层级：
 
-本 BSP 目前对外设的支持情况如下：
+![](docs/picture/lvgl.png)
 
-| **片上外设** | **支持情况** | **备注** |
-| :----------------- | :----------------- | :------------- |
-| UART               | 支持               | UART7 为默认日志输出端口 |
-| GPIO               | 支持               |                |
-| IIC                | 支持               | 软件           |
-| WDT                | 支持               |                |
-| RTC                | 支持               |                |
-| ADC                | 支持               |                |
-| DAC                | 支持               |                |
-| SPI                | 支持               |                |
-| FLASH              | 支持               |                |
-| PWM                | 支持               |                |
-| CAN                | 支持               |                |
-|  SEGGER_RTT        |  支持              |  打开默认segger_rtt为console |
-| 持续更新中...      |                    |                |
-| **外接外设** | **支持情况** | **备注** |
-| WiFi 模块     | 支持        |  [RW007 WiFi 网络模块](https://github.com/RT-Thread-packages/rw007)  |
-| 温湿度传感器   | 支持       |  [HS300x 温湿度模块](https://github.com/Guozhanxin/hs300x) |
-| 室内空气质量传感器 | 支持 | [zmod4410 室内空气质量模块](https://github.com/ShermanShao/zmod4410) |
-| 光线传感器 | 支持 | [isl29035光线传感器模块](https://github.com/ShermanShao/isl29035) |
+### 系统层 System Layer
 
+RT-Thread 是开源国产物联网操作系统，它是一个嵌入式实时多线程操作系统。它集成了大量的系统级基础组件，丰富的软件包，以及详尽的开发指导文档，具体包括：
+
+- 内核层：RT-Thread 内核，是 RT-Thread 的核心部分，包括了内核系统中对象的实现，例如多线程及其调度、信号量、邮箱、消息队列、内存管理、定时器等；libcpu/BSP（芯片移植相关文件 / 板级支持包）与硬件密切相关，由外设驱动和 CPU 移植构成。
+- 组件与服务层：组件是基于 RT-Thread 内核之上的上层软件，例如虚拟文件系统、FinSH 命令行界面、网络框架、设备框架等。采用模块化设计，做到组件内部高内聚，组件之间低耦合。
+- RT-Thread 软件包：运行于 RT-Thread 物联网操作系统平台上，面向不同应用领域的通用软件组件，由描述信息、源代码或库文件组成。
+
+### 组件层 Component Layer
+
+除了系统层支持外，HMI-Board 还集成了多个出色的系统组件，其中 LVGL 作为多媒体组件加入到了本示例项目中。开发者只需要在 RT-Thread Studio/env 中使能 LVGL 软件包，并将其从服务器上拉取下来，便可以将 LVGL 以组件的形式加入到开发项目中。极大的简化了开发者手动将其加入项目中的步骤，提升效率。
+
+### 应用层 Application Layer
+
+应用层为用户在 LVGL 上进行 UI 的二次开发所使用的，用户可以已有/开发的 UI 代码写在 APP 层级。
+
+音乐播放器 DEMO：
+
+通过播放/暂停、上一首/下一首按钮控件，在触摸面板上可以对音乐播放器进行控制。通过上拉面板控件可以查看音乐列表。也可也在代码中修改手动播放为自动播放。
 
 ## 使用说明
 
-使用说明分为如下两个章节：
-
-- 快速上手
-
-  本章节是为刚接触 RT-Thread 的新手准备的使用说明，遵循简单的步骤即可将 RT-Thread 操作系统运行在该开发板上，看到实验效果 。
-- 进阶使用
-
-  本章节是为需要在 RT-Thread 操作系统上使用更多开发板资源的开发者准备的。通过使用 ENV 工具对 BSP 进行配置，可以开启更多板载资源，实现更多高级功能。
-
-### 快速上手
-
-本 BSP 目前仅提供 MDK5 工程。下面以 MDK5 开发环境为例，介绍如何将系统运行起来。
+本 BSP 目前仅提供 MDK5 工程。
 
 **硬件连接**
 
-使用 USB 数据线连接开发板到 PC，使用 J-link 接口下载和 DEBUG 程序。使用 USB 转串口工具连接 UART7：P613(TXD)、P614(RXD)。
+* 使用 USB 数据线连接开发板到 PC，使用 J-link 接口下载和 DEBUG 程序。使用 USB 转串口工具连接 UART7：P613(TXD)、P614(RXD)。
+
+* 使用 Arduino 拓展板，插入 ILI9341-SPI 屏幕。
 
 **编译下载**
 
@@ -86,115 +70,14 @@
 
 ![image-20211011182949604](docs/picture/jflash3.png) 
 
-**查看运行结果**
+## 资料及文档
 
-下载程序成功之后，系统会自动运行并打印系统信息。
+用户如果希望自行移植 LVGL，可以在 RT-Thread 文档中心查看移植相关文档和视频教程：
 
-连接开发板对应串口到 PC , 在终端工具里打开相应的串口（115200-8-1-N），复位设备后，可以看到 RT-Thread 的输出信息。输入 help 命令可查看系统中支持的命令。
+- [LVGL的对接与移植](https://www.rt-thread.org/document/site/#/rt-thread-version/rt-thread-standard/packages-manual/lvgl-docs/introduction)
 
-```bash
- \ | /
-- RT -     Thread Operating System
- / | \     4.0.4 build Oct 11 2021
- 2006 - 2021 Copyright by rt-thread team
+如要进行 LVGL UI 开发可以前往 LVGL 官网以及文档中心获取详细资料：
 
-Hello RT-Thread!
-msh >
-msh >help
-RT-Thread shell commands:
-reboot           - Reboot System
-help             - RT - Thread shell help.
-ps               - List threads in the system.
-free             - Show the memory usage in the system.
-hello            - say hello world
-clear            - clear the terminal screen
-version          - show RT - Thread version information
-list_thread      - list thread
-list_sem         - list semaphore in system
-list_event       - list event in system
-list_mutex       - list mutex in system
-list_mailbox     - list mail box in system
-list_msgqueue    - list message queue in system
-list_timer       - list timer in system
-list_device      - list device in system
-list             - list all commands in system
+- [LVGL - Light and Versatile Embedded Graphics Library](https://lvgl.io/)
 
-msh > 
-```
-
-**应用入口函数**
-
-应用层的入口函数在 **bsp\ra6m4-cpk\src\hal_emtry.c** 中 的 `void hal_entry(void)` 。用户编写的源文件可直接放在 src 目录下。
-
-```c
-void hal_entry(void)
-{
-    rt_kprintf("\nHello RT-Thread!\n");
-
-    while (1)
-    {
-        rt_pin_write(LED3_PIN, PIN_HIGH);
-        rt_thread_mdelay(500);
-        rt_pin_write(LED3_PIN, PIN_LOW);
-        rt_thread_mdelay(500);
-    }
-}
-```
-
-### 进阶使用
-
-**资料及文档**
-
-- [开发板官网主页](https://www2.renesas.cn/cn/zh/products/microcontrollers-microprocessors/ra-cortex-m-mcus/cpk-ra6m4-evaluation-board)
-- [开发板用户手册](https://www2.renesas.cn/cn/zh/document/mah/1527156?language=zh&r=1527191)
-- [瑞萨RA MCU 基础知识](https://www2.renesas.cn/cn/zh/document/gde/1520091)
-- [RA6 MCU 快速设计指南](https://www2.renesas.cn/cn/zh/document/apn/ra6-quick-design-guide)
-- [RA6M4_datasheet](https://www2.renesas.cn/cn/zh/document/dst/ra6m4-group-datasheet)
-- [RA6M4 Group User’s Manual: Hardware](https://www2.renesas.cn/cn/zh/document/man/ra6m4-group-user-s-manual-hardware)
-
-**FSP 配置**
-
-需要修改瑞萨的 BSP 外设配置或添加新的外设端口，需要用到瑞萨的 [FSP](https://www2.renesas.cn/jp/zh/software-tool/flexible-software-package-fsp#document) 配置工具。请务必按照如下步骤完成配置。配置中有任何问题可到[RT-Thread 社区论坛](https://club.rt-thread.org/)中提问。
-
-1. [下载灵活配置软件包 (FSP) | Renesas](https://www.renesas.com/cn/zh/software-tool/flexible-software-package-fsp)，请使用 FSP 3.5.0 版本
-2. 下载安装完成后，需要添加 CPK-RA6M4 开发板的官方板级支持包
-> 打开[ CPK-RA6M4 开发板详情页](https://www2.renesas.cn/jp/zh/products/microcontrollers-microprocessors/ra-cortex-m-mcus/cpk-ra6m4-evaluation-board)，在**“下载”**列表中找到 **”CPK-RA6M4板级支持包“**，点击链接即可下载
-3. 如何将 **”CPK-RA6M4板级支持包“**添加到 FSP 中，请参考文档[如何导入板级支持包](https://www2.renesas.cn/document/ppt/1527171?language=zh&r=1527191)
-4. 请查看文档：[使用 FSP 配置外设驱动](../docs/RA系列使用FSP配置外设驱动.md)，在 MDK 中通过添加自定义命名来打开当前工程的 FSP 配置。
-
-**ENV 配置**
-
-- 如何使用 ENV 工具：[RT-Thread env 工具用户手册](https://www.rt-thread.org/document/site/#/development-tools/env/env)
-
-此 BSP 默认只开启了 UART7 的功能，如果需使用更多高级功能例如组件、软件包等，需要利用 ENV 工具进行配置。
-
-步骤如下：
-1. 在 bsp 下打开 env 工具。
-2. 输入`menuconfig`命令配置工程，配置好之后保存退出。
-3. 输入`pkgs --update`命令更新软件包。
-4. 输入`scons --target=mdk5` 命令重新生成工程。
-
-**SEGGER_RTT使用**
-
-由于瑞萨RA6M4的串口使用需要使用USB转TTL工具，使用起来十分不方便，RT-Thread提供的[RTTHREAD_SEGGER_TOOL软件包](https://github.com/supperthomas/RTTHREAD_SEGGER_TOOL)可以将J-Link作为RT-Thread的console口来使用，用户在`RT-Thread Settings->硬件->板载设备驱动`下使能SEGGER-RTT即可,如下
-
-![jlink-rtt](docs/picture/jlink-rtt.png)
-
-选中之后就能使用J-Link作为RT-Thread的console来使用了！
-
-
-## FAQ
-
-### 使用 MDK 的 DEBUG 时如果遇到提示  “Error: Flash Download failed Cortex-M33” 怎么办？
-
-可按照下图操作，修改 Utilities 中的选项：
-
-![image-20211214102231248](docs/picture/readme_faq1.png) 
-
-## 联系人信息
-
-在使用过程中若您有任何的想法和建议，建议您通过以下方式来联系到我们  [RT-Thread 社区论坛](https://club.rt-thread.org/)
-
-## 贡献代码
-
-如果您对 CPK-RA6M4 感兴趣，并且有一些好玩的项目愿意与大家分享的话欢迎给我们贡献代码，您可以参考 [如何向 RT-Thread 代码贡献](https://www.rt-thread.org/document/site/#/rt-thread-version/rt-thread-standard/development-guide/github/github)。
+- [LVGL documentation](https://docs.lvgl.io/8.3/)
