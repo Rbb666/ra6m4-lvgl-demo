@@ -53,12 +53,18 @@ RT-Thread 是开源国产物联网操作系统，它是一个嵌入式实时多�
 * 使用 USB 数据线连接开发板到 PC，使用 J-link 接口下载和 DEBUG 程序。使用 USB 转串口工具连接 UART7：P613(TXD)、P614(RXD)。
 * 使用 Arduino 拓展板，插入 ILI9341-SPI 屏幕。
 * 或使用杜邦线进行连接：
-  > DC_PIN —— BSP_IO_PORT_04_PIN_15
-  > RES_PIN —— BSP_IO_PORT_06_PIN_11
-  > CS_PIN —— BSP_IO_PORT_04_PIN_13
-  > SPI_MISO_PIN —— BSP_IO_PORT_04_PIN_10
-  > SPI_MOSI_PIN —— BSP_IO_PORT_04_PIN_11
-  > SPI_PCLK_PIN —— BSP_IO_PORT_04_PIN_12
+  
+> DC_PIN —— BSP_IO_PORT_04_PIN_15
+
+> RES_PIN —— BSP_IO_PORT_06_PIN_11
+
+> CS_PIN —— BSP_IO_PORT_04_PIN_13
+
+> SPI_MISO_PIN —— BSP_IO_PORT_04_PIN_10
+
+> SPI_MOSI_PIN —— BSP_IO_PORT_04_PIN_11
+
+> SPI_PCLK_PIN —— BSP_IO_PORT_04_PIN_12
 
 **编译下载**
 
