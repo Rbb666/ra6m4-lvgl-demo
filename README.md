@@ -66,18 +66,17 @@ RT-Thread 是开源国产物联网操作系统，它是一个嵌入式实时多�
 
 > SPI_PCLK_PIN —— BSP_IO_PORT_04_PIN_12
 
-**MDK 烧录调试**
-
-* 下载：点击下载按钮进行固件烧录
-* 调试：点击调试按钮进行代码调试
-
-![](docs/picture/mdk.png)
-
-**编译下载**
+**MDK 编译，调试烧录**
 
 - 编译：双击 project.uvprojx 文件，打开 MDK5 工程，编译程序。
 
-> 注意：此工程需要使用 J-Flash Lite 工具烧录程序。建议使用 V7.50 及以上版本烧录工程。[J-Link 下载链接](https://www.segger.com/downloads/jlink/)
+* 调试+下载：点击调试按钮进行代码调试，这一步同时会烧录代码到mcu中。
+
+![](docs/picture/mdk.png)
+
+**使用其他方式烧录固件**
+
+- 注意：此工程需要使用 J-Flash Lite 工具烧录程序。建议使用 V7.50 及以上版本烧录工程。[J-Link 下载链接](https://www.segger.com/downloads/jlink/)
 
 - 下载：打开 J-Flash lite 工具，选择芯片型号 R7FA6M4AF，点击 OK 进入工具。选择 BSP 目录下 MDK 编译出的 /object/ra6m4.hex 文件，点击 Program Device 按钮开始烧录。具体操作过程可参考下图步骤：
 
