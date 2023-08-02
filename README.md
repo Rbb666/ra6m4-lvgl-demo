@@ -74,6 +74,10 @@ RT-Thread 是开源国产物联网操作系统，它是一个嵌入式实时多�
 
 ![](docs/picture/mdk.png)
 
+* 下载：如果不需要进行调试，可以点击下载按钮烧录代码，如下是下载mdk中算法的配置
+
+![](docs/picture/download.png)
+
 **使用其他方式烧录固件**
 
 - 注意：此工程需要使用 J-Flash Lite 工具烧录程序。建议使用 V7.50 及以上版本烧录工程。[J-Link 下载链接](https://www.segger.com/downloads/jlink/)
